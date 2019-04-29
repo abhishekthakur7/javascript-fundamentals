@@ -1,0 +1,92 @@
+1. Hello world:
+
+- We can use a <script> tag to add JavaScript code to a page.
+- The type and language attributes are not required in HTML 5
+
+- A script in an external file can be inserted with <script src="path/to/script.js"></script>.
+    - The benefit of a separate file is that the browser will download it and store it in its cache.
+    - Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
+    - That reduces traffic and makes pages faster.
+
+----------------------------xxxxxxxxxxx-------------------------------------
+2. Code structure
+
+- A semicolon may be omitted in most cases when a line break exists.
+  However:::
+    Compiler will fail to auto assume semi colon in case of:
+        alert("There will be an error")
+        [1, 2].forEach(alert)
+    Because, JS don't auto assume semicolon before []
+
+- Nested comments are not supported!
+  There may not be /*...*/ inside another /*...*/.
+  Such code will die with an error.
+
+-----------------------------xxxxxxxxxxx-------------------------------------
+3. Use strict --> To keep the old code working, most modifications are off by default. 
+                  You need to explicitly enable them with a special directive: "use strict".
+
+- The directive looks like a string: "use strict" or 'use strict'. 
+  When it is located at the top of a script, the whole script works the “modern” way.
+
+- "use strict" can be put at the start of most kinds of functions instead of the whole script. 
+   Doing that enables strict mode in that function only. But usually, people use it for the whole script.
+      - Please make sure that "use strict" is at the top of your scripts, otherwise strict mode may not be enabled.
+      - Only comments may appear above "use strict".
+
+- There’s no way to cancel use strict
+  There is no directive like "no use strict" that reverts the engine to old behavior.
+  Once we enter strict mode, there’s no return.
+
+- Browser console
+  For the future, when you use a browser console to test features, please note that it 
+  doesn’t use strict by default.
+  Even if we press Shift+Enter to input multiple lines, and put use strict on top, it doesn’t work. 
+  That’s because of how the console executes the code internally.
+  The reliable way to ensure use strict would be to input the code into console like this:
+
+  (function() {
+  'use strict';
+    // ...your code...
+  })()
+
+- Several language features, like “classes” and “modules”, enable strict mode automatically.
+  Strict mode is supported by all modern browsers.
+
+---------------------------------xxxxxxxxxxx---------------------------------------
+
+4. Variables
+
+- To create a variable in JavaScript, use the let keyword.
+- let – is a modern variable declaration. The code must be in strict mode to use let in Chrome (V8).
+- In older scripts, you may also find another keyword: var instead of let
+- The var keyword is almost the same as let. It also declares a variable, but in a slightly different, “old-school” way.
+
+-- Functional languages
+   - It’s interesting to note that functional programming languages, like Scala or Erlang, forbid changing 
+     variable values.
+   - In such languages, once the value is stored “in the box”, it’s there forever. If we need to store 
+     something else, the language forces us to create a new box (declare a new variable). We can’t reuse the old one.
+   - Though it may seem a little odd at first sight, these languages are quite capable of serious development.
+     More than that, there are areas like parallel computations where this limitation confers certain 
+     benefits. Studying such a language (even if you’re not planning to use it soon) is recommended to 
+     broaden the mind.
+
+- There are two limitations on variable names in JavaScript:
+  1. The name must contain only letters, digits, or the symbols $ and _.
+  2. The first character must not be a digit.
+
+- When the name contains multiple words, camelCase is commonly used.
+- Case Sensitive - Variables named apple and AppLE are two different variables.
+
+- Reserved keywords - which cannot be used as variables
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords
+
+- Variable declaration - Normally, we need to define a variable before using it. But in the old times, it was technically possible 
+  to create a variable by a mere assignment of the value without using let. This still works now if we don’t
+  put use strict in our scripts to maintain compatibility with old scripts.
+
+- To declare a constant (unchanging) variable, use const instead of let
+     - Capital-named constants are only used as aliases for “hard-coded” values.
+
+- 
