@@ -8,7 +8,7 @@
     - Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
     - That reduces traffic and makes pages faster.
 
-----------------------------xxxxxxxxxxx-------------------------------------
+---------------------------------------xxxxxxxxxxx-----------------------------------------------
 2. Code structure
 
 - A semicolon may be omitted in most cases when a line break exists.
@@ -22,7 +22,7 @@
   There may not be /*...*/ inside another /*...*/.
   Such code will die with an error.
 
------------------------------xxxxxxxxxxx-------------------------------------
+-----------------------------------------xxxxxxxxxxx-----------------------------------------------
 3. Use strict --> To keep the old code working, most modifications are off by default. 
                   You need to explicitly enable them with a special directive: "use strict".
 
@@ -53,11 +53,11 @@
 - Several language features, like “classes” and “modules”, enable strict mode automatically.
   Strict mode is supported by all modern browsers.
 
----------------------------------xxxxxxxxxxx---------------------------------------
+-------------------------------------------xxxxxxxxxxx---------------------------------------------
 
 4. Variables
 
-- To create a variable in JavaScript, use the let keyword.
+- To create a variable in JavaScript, use the 'let' keyword.
 - let – is a modern variable declaration. The code must be in strict mode to use let in Chrome (V8).
 - In older scripts, you may also find another keyword: var instead of let
 - The var keyword is almost the same as let. It also declares a variable, but in a slightly different, “old-school” way.
@@ -89,4 +89,94 @@
 - To declare a constant (unchanging) variable, use const instead of let
      - Capital-named constants are only used as aliases for “hard-coded” values.
 
-- 
+--------------------------------------------------xxxxxxxxxxx------------------------------------------------------
+5. DataTypes
+
+- Besides regular numbers, there are so-called “special numeric values” which also belong to this 
+  data type: Infinity, -Infinity and NaN
+     - 'Infinity' -> represents the mathematical Infinity ∞. It is a special value that’s greater than any number.
+     - 'NaN' -> (Full form "Not a Number") represents a computational error. It's type is "number". It is a result of an incorrect or an undefined mathematical operation, for instance:
+            alert( "not a number" / 2 ); // NaN, such division is erroneous
+
+- A string in JavaScript must be surrounded by quotes.
+      In JavaScript, there are 3 types of quotes.
+      - Double quotes: "Hello".
+      - Single quotes: 'Hello'.
+      - Backticks: `Hello`.
+
+      Backticks are “extended functionality” quotes. They allow us to embed variables and expressions into a 
+      string by wrapping them in ${…}, for example:
+
+      let name = "John";
+      // embed a variable
+      alert( `Hello, ${name}!` ); // Hello, John!
+
+- In JavaScript, 'null' is not a “reference to a non-existing object” or a “null pointer” like in some other 
+  languages. It’s just a "special value" which represents “nothing”, “empty” or “value unknown”.
+
+- The special value 'undefined' also stands apart. It "makes a type of its own", just like null.
+  The meaning of undefined is “value is not assigned”.
+  If a variable is declared, but not assigned, then its value is undefined:
+  let x;
+  alert(x); // shows "undefined"
+
+- Technically, it is possible to assign undefined to any variable. But we don’t recommend doing that. 
+  Normally, we use null to assign an “empty” or “unknown” value to a variable, and we use undefined for 
+  checks like seeing if a variable has been assigned.
+
+
+- The object type is special.
+  All other types (number, String, boolean) are called “primitive” because their values can contain only a single thing (be it a string or a number or 
+  whatever). In contrast, objects are used to store collections of data and more complex entities.
+
+- The 'symbol' type is used to create unique identifiers for objects.
+
+- The typeof operator returns the type of the argument. It’s useful when we want to process values of different types differently or just want to do a quick check.
+      - It supports two forms of syntax:
+          - As an operator: typeof x.
+          - As a function: typeof(x).
+  In other words, it works with parentheses or without them. The result is the same.
+  The call to typeof x returns a string with the type name:
+  
+  *TIP:
+  Normally typeof [] returns "object" for all object types which is almost useless information. A better typeof:
+  const objType = obj => Object.prototype.toString.call(obj);
+  Use like this:
+  objType([]); // returns "[object Array]"
+
+  typeof undefined // "undefined"
+  typeof 0 // "number"
+  typeof true // "boolean"
+  typeof "foo" // "string"
+  typeof Symbol("id") // "symbol"
+  typeof Math // "object"
+  typeof arguments //"object"
+  typeof undefined //"undefined"
+  typeof NaN //"number"
+  typeof null // "object"
+  typeof alert // "function"
+
+  **Important explanations for last 2:
+     --> The result of typeof null is "object". That’s wrong. It is an officially recognized error in typeof, kept for 
+         compatibility. Of course, null is not an object. It is a special value with a separate type of its own. 
+         So, again, this is an error in the language.
+    
+     --> The result of typeof alert is "function", because alert is a function of the language. We’ll study functions in 
+         the next chapters where we’ll see that there’s no special “function” type in JavaScript. Functions belong to the 
+         object type. But typeof treats them differently. Formally, it’s incorrect, but very convenient in practice.
+
+- Summary ::::
+  There are 7 basic types in JavaScript.
+
+  1. "number" for numbers of any kind: integer or floating-point.
+  2. "string" for strings. A string may have one or more characters, there’s no separate single-character type.
+  3. "boolean" for true/false.
+  4. "null" for unknown values – a standalone type that has a single value null.
+  5. "undefined" for unassigned values – a standalone type that has a single value undefined.
+  6. "object" for more complex data structures.
+  7. "symbol" for unique identifiers.
+
+  The typeof operator allows us to see which type is stored in a variable.
+    - Two forms: typeof x or typeof(x).
+    - Returns a string with the name of the type, like "string".
+    - For null returns "object" – this is an error in the language, it’s not actually an object.
