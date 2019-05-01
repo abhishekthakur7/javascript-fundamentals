@@ -152,7 +152,7 @@
   typeof Math // "object"
   typeof arguments //"object"
   typeof undefined //"undefined"
-  typeof NaN //"number"
+  typeof NaN //"number" ************ use isNaN(value) to check if some value is NaN or not
   typeof null // "object"
   typeof alert // "function"
 
@@ -180,3 +180,157 @@
     - Two forms: typeof x or typeof(x).
     - Returns a string with the name of the type, like "string".
     - For null returns "object" – this is an error in the language, it’s not actually an object.
+
+------------------------------------------------------xxxxxxxxxxx---------------------------------------
+6. Type Conversions
+
+- ToString:::::
+   - We can call the "String(value)" function to convert a value to a string:
+        value = String(value); // now value is a string "true"
+        alert(typeof value); // string
+
+   *** String conversion is mostly obvious. A false becomes "false", null becomes "null", etc.
+    
+- ToNumber:::::
+   - Numeric conversion happens in mathematical functions and expressions automatically.
+     For example:
+         - alert( "6" / "2" ); // 3, strings are converted to numbers
+   
+    - We can use the "Number(value)" function to explicitly convert a value to a number:
+      let str = "123";
+      alert(typeof str); // string
+      let num = Number(str); // becomes a number 123
+      alert(typeof num); // number
+
+    - Explicit conversion is usually required when we read a value from a string-based source like a 
+      text form but expect a number to be entered.
+      If the string is not a valid number, the result of such a conversion is NaN. For instance:
+      let age = Number("an arbitrary string instead of a number");
+      alert(age); // NaN, conversion failed
+
+    *** Numeric conversion rules:
+        Value	Becomes…
+        undefined       -->	NaN
+        null            -->	0
+        true and false 	--> 1 and 0
+        string          --> Whitespaces from the start and end are removed. If the remaining string is 
+                            empty, the result is 0. Otherwise, the number is “read” from the string. 
+                            An error gives NaN.
+
+        Examples:
+            alert( Number("   123   ") ); // 123
+            alert( Number("123z") );      // NaN (error reading a number at "z")
+            alert( Number(true) );        // 1
+            alert( Number(false) );       // 0
+
+    *** TIP::::
+        - Almost all mathematical operations convert values to numbers. A notable exception is addition +. 
+          If one of the added values is a string, the other one is also converted to a string. 
+          Example:
+          alert ( 1 + '2' ); //12
+
+- ToBoolean::::::
+   - Can be performed with "Boolean(value)".
+     Follows the rules:
+     Value	Becomes…
+     0, null, undefined, NaN, ""                                             ----->	false
+     any other value (number +ve or -ve/non empty string/space-only string)	 -----> true
+
+-- SUMMARY:
+    -> true + false;  //1
+    -> "" + 1 + 0;    //10
+    -> "" - 1 + 0;    //-1
+    -> 4 + 5 + "px";  //45px
+    -> "$" + 4 + 5;   //$45
+    -> "4px" - 2;     //NaN - It will fail to convert 4px to Number
+    -> "  -9  " + 5;  //"  -9  5"
+    -> null + 1;      //1 - Because null is 0 in terms of numbers
+    -> undefined + 1; //NaN - Because undefined is NaN in terms of numbers
+    -> '2'+'2'-'2';   //20 - '22' - '2' = 20
+    -> true+1;        //2 - true is converted to number i.e. 1
+    -> "-9\n" + 5;    //"-9\n5"
+    -> "-9\n"-5;      //-14 - \n is new line character, and after evaluating it will become like:
+                         "-9"
+                         -5
+                         Which is same as "-9"-5 for JS, so result is -14
+
+-------------------------------------------------xxxxxxxxxxx---------------------------------------------
+
+7. Operators
+
+- The plus + exists in two forms: the binary form that we used above and the unary form.
+  The unary plus or, in other words, the plus operator + applied to a single value, doesn’t do anything 
+  to numbers. But if the operand is not a number, the unary plus converts it into a number.
+
+  For example:
+  // No effect on numbers
+  let x = 1;
+  alert( +x ); // 1
+
+  let y = -2;
+  alert( +y ); // -2
+
+  // Converts non-numbers
+  alert( +true ); // 1
+  alert( +"" );   // 0
+
+- It actually does the same thing as Number(...), but is shorter.
+
+- Operator precedence:::
+     - BODMAS
+     - Parentheses override any precedence, so if we’re not satisfied with the implicit order,
+       we can use them to change it. For example: (1 + 2) * 2.
+  
+  *** The “unary plus” has a priority of 16 which is higher than the 13 of “addition” (binary plus). 
+     That’s why, in the expression "+apples + +oranges", unary pluses work before the addition.
+
+    - Let’s note that an assignment = is also an operator. It is listed in the precedence table with the 
+      very low priority of 3.
+           -  An operator always returns a value. That’s obvious for most of them like addition + or 
+              multiplication *. But the assignment operator follows this rule too.
+              The call x = value writes the value into x and then returns it.
+              For example:
+              let a = 1;
+              let b = 2;
+              let c = 3 - (a = b + 1); 
+              alert( a ); // 3
+              alert( c ); // 0
+
+  - Important:
+       - Increment/decrement can only be applied to variables. Trying to use it on a value like 5++ will
+         give an error.
+
+ - Modify-and-assign operator:
+    operators exist for all arithmetical and bitwise operators: /=, -=, etc.
+    Such operators have the same precedence as a normal assignment, so they run after most other calculations:
+    let n = 2;
+    n *= 3 + 5;
+    alert( n ); // 16  (right part evaluated first, same as n *= 8)
+
+ - Comma Operator:
+     - The comma operator , is one of the rarest and most unusual operators. Sometimes, it’s used to write 
+       shorter code, so we need to know it in order to understand what’s going on.
+       The comma operator allows us to evaluate several expressions, dividing them with a comma ,.
+       Each of them is evaluated but only the result of the last one is returned.
+       For example:
+        - let a = (1 + 2, 3 + 4);
+        - alert( a ); // 7 (the result of 3 + 4)
+        Here, the first expression 1 + 2 is evaluated and its result is thrown away. Then, 3 + 4 is 
+        evaluated and returned as the result.
+      
+      **Comma has a very low precedence
+          - Please note that the comma operator has very low precedence, lower than =, so parentheses are 
+            important in the example above.
+          - Without them: a = 1 + 2, 3 + 4 evaluates + first, summing the numbers into a = 3, 7, then the
+            assignment operator = assigns a = 3, and finally the number after the comma, 7, is not processed
+            so it’s ignored.
+
+          - Why do we need an operator that throws away everything except the last part?
+            Sometimes, people use it in more complex constructs to put several actions in one line.
+            For example:
+              - // three operations in one line
+                for (a = 1, b = 3, c = a * b; a < 10; a++) {
+                ...
+                }
+
+--------------------------------------------------xxxxxxxxxxx---------------------------------------------------
