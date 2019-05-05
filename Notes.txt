@@ -491,3 +491,62 @@
 ----------------------------------------------------------------xxxxxxxxxxx-----------------------------------------------
 
 11. Loops: while and for
+		- Summary
+			We covered 3 types of loops:
+
+			while – The condition is checked before each iteration.
+			do..while – The condition is checked after each iteration.
+			for (;;) – The condition is checked before each iteration, additional settings available.
+			To make an “infinite” loop, usually the while(true) construct is used. Such a loop, just like any other, can be stopped with the break directive.
+
+			If we don’t want to do anything in the current iteration and would like to forward to the next one, we can use the continue directive.
+
+			break/continue support labels before the loop. A label is the only way for break/continue to escape a nested loop to go to an outer one.
+			
+---------------------------------------------------------------xxxxxxxxxxx-------------------------------------------------
+
+12. Functions
+	- A variable declared inside a function is only visible inside that function.
+	- A function can access an outer variable as well, The function has full access to the outer variable. It can modify it as well.
+	- Global variables
+        - Variables declared outside of any function, such as the outer userName in the code above, are called global.
+		- Global variables are visible from any function (unless shadowed by locals).
+		- Usually, a function declares all variables specific to its task. Global variables only store project-level data, 
+		  and it’s important that these variables are accessible from anywhere. Modern code has few or no globals. Most variables reside 
+		  in their functions.
+	- Default values
+		- If a parameter is not provided, then its value becomes undefined.
+		- For instance, the aforementioned function showMessage(from, text) can be called with a single argument:
+			showMessage("Ann");
+		- That’s not an error. Such a call would output "Ann: undefined". There’s no text, so it’s assumed that text === undefined.
+		  If we want to use a “default” text in this case, then we can specify it after =:
+                function showMessage(from, text = "no text given") {  OR function showMessage(from, text = anotherFunction()) {
+				alert( from + ": " + text );
+				}
+				showMessage("Ann"); // Ann: no text given
+				
+		- Default parameters old-style
+			- Old editions of JavaScript did not support default parameters. So there are alternative ways to support them, 
+			  that you can find mostly in the old scripts.
+			  For instance, an explicit check for being undefined:
+				function showMessage(from, text) {
+					if (text === undefined) {
+					text = 'no text given';
+				}
+				alert( from + ": " + text );
+				}
+			…Or the || operator:
+				function showMessage(from, text) {
+				// if text is falsy then text gets the "default" value
+				text = text || 'no text given';
+				...
+				}     
+				
+		- Never add a newline between return and the value, because JS will assume semicolon after return and empty return will be there.
+		- Function naming:
+			- A name should clearly describe what the function does. When we see a function call in the code, a good name instantly 
+			  gives us an understanding what it does and returns.
+			- A function is an action, so function names are usually verbal.
+			- There exist many well-known function prefixes like create…, show…, get…, check… and so on. Use them to hint what a function does.
+
+-----------------------------------------------------------------xxxxxxxxxxx------------------------------------------------------------
