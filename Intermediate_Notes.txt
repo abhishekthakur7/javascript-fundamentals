@@ -55,7 +55,13 @@
               
       ** Reserved words are allowed as property names
          A variable cannot have a name equal to one of language-reserved words like “for”, “let”, “return” etc.
-         But for an object property, there’s no such restriction. Any name is fine
+         But for an object property, there’s no such restriction. Any name is fine:
+         let obj = {
+            for: 1,
+            let: 2,
+            return: 3
+         };
+         alert( obj.for + obj.let + obj.return );  // 6
          
       - Property value shorthand
            - The use-case of making a property from a variable is so common, that there’s a special property value shorthand to make it              shorter.
