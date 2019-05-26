@@ -1,0 +1,234 @@
+1. Objects -
+      - An object can be created with figure brackets {…} with an optional list of properties. A property is a “key: value” pair, where           key is a string (also called a “property name”), and value can be anything.
+      - An empty object (“empty cabinet”) can be created using one of two syntaxes:
+           - let user = new Object(); // "object constructor" syntax
+           OR
+           - let user = {};  // "object literal" syntax
+           
+      - Literals and properties
+          - We can immediately put some properties into {...} as “key: value” pairs:
+                let user = {     // an object
+                  name: "John",  // by key "name" store value "John"
+                  age: 30        // by key "age" store value 30
+                };
+          - Property values are accessible using the dot notation:
+                // get fields of the object:
+                alert( user.name ); // John
+                alert( user.age ); // 30
+           - To remove a property, we can use delete operator:
+                delete user.age;
+           - We can also use multiword property names, but then they must be quoted:
+                let user = {
+                  name: "John",
+                  age: 30,
+                  "likes birds": true  // multiword property name must be quoted
+                };
+            - The last property in the list may end with a comma:
+                  let user = {
+                    name: "John",
+                    age: 30,
+                   }
+               That is called a “trailing” or “hanging” comma. Makes it easier to add/remove/move around properties, 
+               because all lines become alike. 
+      - Square brackets - recommended way to access properties of object
+                For multiword properties, the dot access doesn’t work:
+                // this would give a syntax error
+                user.likes birds = true
+            - That’s because the dot requires the key to be a valid variable identifier. That is: no spaces and other limitations.
+                There’s an alternative “square bracket notation” that works with any string:
+                let user = {};
+                // set
+                user["likes birds"] = true;
+             - Square brackets also provide a way to obtain the property name as the result of any expression – as opposed to a literal                string – like from a variable as follows:
+               let key = "likes birds";
+               // same as user["likes birds"] = true;
+               user[key] = true;
+               
+      - Computed properties
+           - We can use square brackets in an object literal. That’s called computed properties.
+           - For instance:
+              let fruit = prompt("Which fruit to buy?", "apple");
+              let bag = {
+                [fruit]: 5, // the name of the property is taken from the variable fruit
+              };
+              alert( bag.apple ); // 5 if fruit="apple"
+              
+      ** Reserved words are allowed as property names
+         A variable cannot have a name equal to one of language-reserved words like “for”, “let”, “return” etc.
+         But for an object property, there’s no such restriction. Any name is fine:
+         let obj = {
+            for: 1,
+            let: 2,
+            return: 3
+         };
+         alert( obj.for + obj.let + obj.return );  // 6
+         
+      - Property value shorthand
+           - The use-case of making a property from a variable is so common, that there’s a special property value shorthand to make it              shorter.
+             Instead of name:name we can just write name, like this:
+             function makeUser(name, age) {
+               return {
+                 name, // same as name: name
+                 age   // same as age: age
+                 // ...
+               };
+             }
+			 
+	  - Existence check
+			- A notable objects feature is that it’s possible to access any property. There will be no error if the property 
+			doesn’t exist! Accessing a non-existing property just returns undefined.
+			let user = {};
+			alert( user.noSuchProperty === undefined ); // true means "no such property" 
+			
+			** There also exists a special operator "in" to check for the existence of a property.
+			   The syntax is:
+			   "key" in object
+			   
+			** Recommended is using "in" operator, scenario:
+			   It’s when an object property exists, but stores undefined:
+				 let obj = {
+				  test: undefined
+				};
+				alert( obj.test ); // it's undefined, so - no such property?
+				alert( "test" in obj ); // true, the property does exist!
+				
+	  - The “for…in” loop
+		To walk over all keys of an object, there exists a special form of the loop: for..in. This is a completely different 
+		thing from the for(;;) construct that we studied before.
+		The syntax:
+		for (key in object) {
+		  // executes the body for each key among object properties
+		}
+		
+	  - Ordered like an object
+			Are objects ordered? In other words, if we loop over an object, do we get all properties in the same order they 
+			were added? Can we rely on this?
+			The short answer is: “ordered in a special fashion”: integer properties are sorted, others appear in creation order.  	 
+		
+	  - Copying by reference
+			One of the fundamental differences of objects vs primitives is that they are stored and copied “by reference”.
+			Primitive values: strings, numbers, booleans – are assigned/copied “as a whole value”.
+			For instance:
+			let message = "Hello!";
+			let phrase = message;
+		
+		  - Objects are not like that.
+			A variable stores not the object itself, but its “address in memory”, in other words “a reference” to it.
+			Example:
+			  - let user = { name: 'John' };
+				let admin = user;
+				admin.name = 'Pete'; // changed by the "admin" reference
+				alert(user.name); // 'Pete', changes are seen from the "user" reference
+				
+	  - Comparison by reference
+			- The equality == and strict equality === operators for objects work exactly the same.
+			- Two objects are equal only if they are the same object.
+				For instance, two variables reference the same object, they are equal:
+				let a = {};
+				let b = a; // copy the reference
+				alert( a == b ); // true, both variables reference the same object
+				alert( a === b ); // true
+			- And here two independent objects are not equal, even though both are empty:
+				let a = {};
+				let b = {}; // two independent objects
+				alert( a == b ); // false
+				
+	  - Const object:::
+			- An object declared as const can be changed. That’s because const fixes the value of user itself. 
+			  And here user stores the reference to the same object all the time. The line (*) goes inside the object, it 
+			  doesn’t reassign user.
+			  For instance:
+			 	const user = {
+				  name: "John"
+				};
+				user.age = 25;
+				alert(user.age); // 25
+			
+			** However, you cannot reassign new object to it, example:
+			    const user = {
+				  name: "John"
+				};
+				// Error (can't reassign user)
+				user = {
+				  name: "Pete"
+				};
+				
+	  - Cloning and merging, Object.assign:::
+	        - To clone an object or merge multiple objects we can use below approaches:
+			    1. For loop:
+				   - let user = {
+					  name: "John",
+					  age: 30
+					};
+					let clone = {}; // the new empty object
+					// let's copy all user properties into it
+					for (let key in user) {
+					  clone[key] = user[key];
+					}
+					
+				2. Object.assign(dest, [src1, src2, src3...])
+				   - Arguments dest, and src1, ..., srcN (can be as many as needed) are objects.
+				   - It copies the properties of all objects src1, ..., srcN into dest. In other words, properties of all 
+				     arguments starting from the 2nd are copied into the 1st. Then it returns dest.
+				   - For example:
+				      - let user = { name: "John" };
+						let permissions1 = { canView: true };
+						let permissions2 = { canEdit: true };
+						// copies all properties from permissions1 and permissions2 into user
+						Object.assign(user, permissions1, permissions2);
+						// now user = { name: "John", canView: true, canEdit: true }
+				  - If the receiving object (user) already has the same named property, it will be overwritten.
+				  
+		    ** Deep cloning
+				 -> We have to do it in case of nesting of objects, only outer properties are cloned by Object.assign method and nested objects
+					are copied by reference.
+					For example:
+					let user = {
+					  name: "John",
+					  sizes: {
+						height: 182,
+						width: 50
+					  }
+					};
+					let clone = Object.assign({}, user);
+					alert( user.sizes === clone.sizes ); // true, same object
+					// user and clone share sizes
+					user.sizes.width++;       // change a property from one place
+					alert(clone.sizes.width); // 51, see the result from the other one
+					
+				 -> To fix this problem:
+						There’s a standard algorithm for deep cloning that handles the case above and more complex cases, 
+						called the Structured cloning algorithm. In order not to reinvent the wheel, we can use a working 
+						implementation of it from the JavaScript library "lodash", the method is called "_.cloneDeep(obj)".
+						
+						
+		** SUMMARY::::
+			 - Objects are associative arrays with several special features.
+			 - They store properties (key-value pairs), where:
+			 - Property keys must be strings or symbols (usually strings).
+			 - Values can be of any type.
+			 - To access a property, we can use:
+				 The dot notation: obj.property.
+				 Square brackets notation obj["property"]. Square brackets allow to take the key from a variable, like obj[varWithKey].
+			 - Additional operators:
+					To delete a property: delete obj.prop.
+					To check if a property with the given key exists: "key" in obj.
+					To iterate over an object: for (let key in obj) loop.
+	     	 - Objects are assigned and copied by reference. In other words, a variable stores not the “object value”, but 
+			   a “reference” (address in memory) for the value. So copying such a variable or passing it as a function argument 
+			   copies that reference, not the object. All operations via copied references (like adding/removing properties) are 
+			   performed on the same single object.
+			 - To make a “real copy” (a clone) we can use Object.assign or _.cloneDeep(obj).
+			 - What we’ve studied in this chapter is called a “plain object”, or just Object.
+			 - There are many other kinds of objects in JavaScript:
+					Array to store ordered data collections,
+					Date to store the information about the date and time,
+					Error to store the information about an error.
+					…And so on.
+					They have their special features that we’ll study later. Sometimes people say something like “Array type” or 
+					“Date type”, but formally they are not types of their own, but belong to a single “object” data type. 
+					And they extend it in various ways.
+				
+------------------------------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxxxx------------------------------------------------
+
+- Garbage collection
