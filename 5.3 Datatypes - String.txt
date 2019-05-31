@@ -1,0 +1,338 @@
+--> Strings
+
+		In JavaScript, the textual data is stored as strings. There is no separate type for a single character.
+		The internal format for strings is always UTF-16, it is not tied to the page encoding.
+		
+	--> Quotes:
+	
+			Let’s recall the kinds of quotes.
+
+			Strings can be enclosed within either single quotes, double quotes or backticks:
+
+			let single = 'single-quoted';
+			let double = "double-quoted";
+			let backticks = `backticks`;
+			
+			Single and double quotes are essentially the same. Backticks, however, allow us to embed any expression into the string, including function calls:
+
+			 function sum(a, b) {
+			  return a + b;
+			}
+			alert(`1 + 2 = ${sum(1, 2)}.`); // 1 + 2 = 3.
+			
+			Another advantage of using backticks is that they allow a string to span multiple lines:
+
+			 let guestList = `Guests:
+			 * John
+			 * Pete
+			 * Mary
+			`;
+			alert(guestList); // a list of guests, multiple lines
+			
+			If we try to use single or double quotes in the same way, there will be an error:
+
+			let guestList = "Guests:  // Error: Unexpected token ILLEGAL
+			* John";
+			
+		** Tagged Templates:
+			Backticks also allow us to specify a “template function” before the first backtick. The syntax is: func`string`. 
+			The function func is called automatically, receives the string and embedded expressions and can process them. You 
+			can read more about it in the docs (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals). 
+			This is called “tagged templates”.
+			
+	--> Special characters:
+	
+			All special characters start with a backslash character \. It is also called an “escape character”.
+			
+			Character		Description
+			\b				Backspace
+			\f				Form feed
+			\n				New line
+			\r				Carriage return
+			\t				Tab
+			\uNNNN			A unicode symbol with the hex code NNNN, for instance \u00A9 – is a unicode for the copyright symbol ©. 
+							It must be exactly 4 hex digits.
+			\u{NNNNNNNN}	Some rare characters are encoded with two unicode symbols, taking up to 4 bytes. This long unicode 
+			                requires braces around it.
+							
+			Examples with unicode:
+			
+			alert( "\u00A9" ); // ©
+			alert( "\u{20331}" ); // 佫, a rare chinese hieroglyph (long unicode)
+			alert( "\u{1F60D}" ); // 😍, a smiling face symbol (another long unicode)
+			
+	--> String length:
+	
+			The length property has the string length:
+			
+			alert( `My\n`.length ); // 3
+				\n is a single “special” character, so the length is indeed 3.
+			
+			** Please note that str.length is a numeric property, not a function. There is no need to add parenthesis after it.
+			
+	--> Accessing characters:
+	
+			To get a character at position pos, use square brackets [pos] or call the method str.charAt(pos). The first character starts from the zero position:
+
+			let str = `Hello`;
+
+			// the first character
+			alert( str[0] ); // H
+			alert( str.charAt(0) ); // H
+
+			// the last character
+			alert( str[str.length - 1] ); // o
+			
+		 ** The square brackets are a modern way of getting a character, while charAt exists mostly for historical reasons.
+
+			The only difference between them is that if no character is found, [] returns undefined, and charAt returns an empty 
+			string:
+
+			let str = `Hello`;
+			alert( str[1000] ); // undefined
+			alert( str.charAt(1000) ); // '' (an empty string)
+			
+			We can also iterate over characters using for..of:
+
+			for (let char of "Hello") {
+			  alert(char); // H,e,l,l,o (char becomes "H", then "e", then "l" etc)
+			}
+			
+	--> Strings are immutable:
+	
+			Strings can’t be changed in JavaScript. It is impossible to change a character.
+
+			Let’s try it to show that it doesn’t work:
+
+			let str = 'Hi';
+			str[0] = 'x'; // error
+			alert( str[0] ); // H, doesn’t work
+			
+			The usual workaround is to create a whole new string and assign it to str instead of the old one.
+
+			For instance:
+
+			let str = 'Hi';
+			str = 'h' + str[1];  // replace the string
+			alert( str ); // hi
+			
+	--> Changing the case:
+	
+			Methods toLowerCase() and toUpperCase() change the case:
+
+			alert( 'Interface'.toUpperCase() ); // INTERFACE
+			alert( 'Interface'.toLowerCase() ); // interface
+			
+	--> Searching for a substring:
+	
+			The first method is str.indexOf(substr, pos). (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf).
+
+			It looks for the substr in str, starting from the given position pos, and returns the position where the 
+			match was found or -1 if nothing can be found.
+
+			For instance:
+				let str = 'Widget with id';
+				alert( str.indexOf('Widget') ); // 0, because 'Widget' is found at the beginning
+				alert( str.indexOf('widget') ); // -1, not found, the search is case-sensitive
+				alert( str.indexOf("id") ); // 1, "id" is found at the position 1 (..idget with id)
+			
+			The optional second parameter allows us to search starting from the given position.
+
+			For instance, the first occurrence of "id" is at position 1. To look for the next occurrence, let’s start the search 
+			from position 2:
+				let str = 'Widget with id';
+				alert( str.indexOf('id', 2) ) // 12
+			
+			If we’re interested in all occurrences, we can run "indexOf" in a loop. Every new call is made with the position after
+			the previous match:
+			
+				let str = "As sly as a fox, as strong as an ox";
+				let target = "as";
+				let pos = -1;
+				while ((pos = str.indexOf(target, pos + 1)) != -1) {
+				  alert( pos );
+				}
+				
+			--> str.lastIndexOf(substr, position)
+					There is also a similar method str.lastIndexOf(substr, position) that searches from the end of a string 
+					to its beginning.
+					It would list the occurrences in the reverse order.	
+					
+				** There is a slight inconvenience with indexOf in the "if" test. We can’t put it in the if like this:
+
+					 let str = "Widget with id";
+					if (str.indexOf("Widget")) {
+						alert("We found it"); // doesn't work!
+					}
+					
+					The alert in the example above doesn’t show because str.indexOf("Widget") returns 0 (meaning that it found 
+					the match at the starting position). Right, but if considers 0 to be false.
+
+					So, we should actually check for -1, like this:
+					
+					let str = "Widget with id";
+					if (str.indexOf("Widget") != -1) {
+						alert("We found it"); // works now!
+					}
+				
+			*** The bitwise NOT trick, not recommended to use language features in a non-obvious way:
+			
+					One of the old tricks used here is the bitwise NOT ~ operator. It converts the number to a 
+					32-bit integer (removes the decimal part if exists) and then reverses all bits in its binary representation.
+
+					For 32-bit integers the call ~n means exactly the same as -(n+1) (due to IEEE-754 format).
+
+					For instance:
+						alert( ~2 ); // -3, the same as -(2+1)
+						alert( ~1 ); // -2, the same as -(1+1)
+						alert( ~0 ); // -1, the same as -(0+1)
+						alert( ~-1 ); // 0, the same as -(-1+1)
+						
+					So, the test if ( ~str.indexOf("...") ) is truthy that the result of indexOf is not -1. 
+					In other words, when there is a match.
+
+					People use it to shorten indexOf checks:
+
+					let str = "Widget";
+
+					if (~str.indexOf("Widget")) {
+					  alert( 'Found it!' ); // works
+					}
+					
+					** Just remember: if (~str.indexOf(...)) reads as “if found”.
+					
+			--> includes, startsWith, endsWith:
+			
+					The more modern method str.includes(substr, pos) returns true/false depending on whether str contains 
+					substr within.
+
+					It’s the right choice if we need to test for the match, but don’t need its position:
+
+						alert( "Widget with id".includes("Widget") ); // true
+						alert( "Hello".includes("Bye") ); // false
+					
+					The optional second argument of str.includes is the position to start searching from:
+
+						alert( "Midget".includes("id") ); // true
+						alert( "Midget".includes("id", 3) ); // false, from position 3 there is no "id"
+						
+					The methods str.startsWith and str.endsWith do exactly what they say:
+
+						alert( "Widget".startsWith("Wid") ); // true, "Widget" starts with "Wid"
+						alert( "Widget".endsWith("get") );   // true, "Widget" ends with "get"
+						
+		--> Getting a substring:
+		
+				There are 3 methods in JavaScript to get a substring: "substring", "substr" and "slice".
+
+				1. str.slice(start [, end])
+						- Returns the part of the string from start to (but not including) end.
+						- If there is no second argument, then slice goes till the end of the string
+						- Negative values for start/end are also possible. They mean the position is counted from the string end
+						
+				2. str.substring(start [, end])
+						Returns the part of the string between start and end.
+						This is almost the same as slice, but it allows start to be greater than end.
+						Negative arguments are not supported, they are treated as 0.
+						
+						For instance:
+							let str = "stringify";
+							// these are same for substring
+							alert( str.substring(2, 6) ); // "ring"
+							alert( str.substring(6, 2) ); // "ring"
+							
+				3. str.substr(start [, length])
+						Returns the part of the string from start, with the given length.
+						In contrast with the previous methods, this one allows us to specify the length instead of 
+						the ending position:
+
+							let str = "stringify";
+							alert( str.substr(2, 4) ); // ring, from the 2nd position get 4 characters
+							let str = "stringify";
+							alert( str.substr(-4, 2) ); // gi, from the 4th position get 2 characters
+							
+				Let’s recap these methods to avoid any confusion:
+
+				method					selects…									negatives
+				slice(start, end)		from start to end (not including end)		allows negatives
+				substring(start, end)	between start and end						negative values mean 0
+				substr(start, length)	from start get length characters			allows negative start
+				
+				** NOTE: substr is browser specific
+				** Recommended is slice, The author finds themself using slice almost all the time.
+				
+		--> Comparing strings:
+				
+				As we know from the chapter Comparisons, strings are compared character-by-character in alphabetical order.
+				Although, there are some oddities.
+				
+				All strings are encoded using UTF-16. That is: each character has a corresponding numeric code. 
+				There are special methods that allow to get the character for the code and back.
+
+				"str.codePointAt(pos)": Returns the code for the character at position pos:
+
+				 // different case letters have different codes
+				alert( "z".codePointAt(0) ); // 122
+				alert( "Z".codePointAt(0) ); // 90
+				
+				"String.fromCodePoint(code)": Creates a character by its numeric code
+
+				alert( String.fromCodePoint(90) ); // Z
+				
+				We can also add unicode characters by their codes using \u followed by the hex code:
+
+				 // 90 is 5a in hexadecimal system
+				alert( '\u005a' ); // Z
+				
+				Now let’s see the characters with codes 65..220 (the latin alphabet and a little bit extra) by making a 
+				string of them:
+
+				let str = '';
+				for (let i = 65; i <= 220; i++) {
+				  str += String.fromCodePoint(i);
+				}
+				alert( str );
+				// ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+				// ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
+				
+				--> Correct comparisons:
+				
+							The call "str1.localeCompare(str2)":
+
+								Returns 1 if str is greater than str2 according to the language rules.
+								Returns -1 if str is less than str2.
+								Returns 0 if they are equal.
+								
+							For instance:
+								alert( 'Österreich'.localeCompare('Zealand') ); // -1
+							
+							This method actually has two additional arguments specified in the documentation (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare), 
+							which allows it to specify the language (by default taken from the environment) and setup additional rules like case 
+							sensitivity or should "a" and "á" be treated as the same etc.
+							
+							
+		--> Some more methods:
+				str.trim() – removes (“trims”) spaces from the beginning and end of the string.
+				str.repeat(n) – repeats the string n times.
+				And... (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+													
+													
+													
+		*** Create a function truncate(str, maxlength) that checks the length of the str and, if it exceeds maxlength – 
+		    replaces the end of str with the ellipsis character "…", to make its length equal to maxlength.
+
+			The result of the function should be the truncated (if needed) string.
+
+			For instance:
+
+			truncate("What I'd like to tell on this topic is:", 20) = "What I'd like to te…"
+
+			truncate("Hi everyone!", 20) = "Hi everyone!"
+			
+			** Note that there is actually a single unicode character for an ellipsis. That’s not three dots.
+			
+			SOLUTION:
+				function truncate(str, maxlength) {
+				  return (str.length > maxlength) ?
+					str.slice(0, maxlength - 1) + '…' : str;
+				}
